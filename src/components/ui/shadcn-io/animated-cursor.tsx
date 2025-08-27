@@ -103,28 +103,13 @@ function Cursor({ ref, children, className, style, ...props }: CursorProps) {
       dockElements.forEach(dock => {
         (dock as HTMLElement).style.cursor = 'auto';
       });
+      
+      // Applica il cursore personalizzato solo al container principale
       parentElement.style.cursor = 'none';
-      // Disabilita completamente il cursore standard su tutto il documento
-      document.body.style.cursor = 'none';
-      
-      // Forza il cursore personalizzato su tutti gli elementi
-      const forceCustomCursor = () => {
-        document.body.style.cursor = 'none';
-        const allElements = document.querySelectorAll('*');
-        allElements.forEach(el => {
-          (el as HTMLElement).style.cursor = 'none';
-        });
-      };
-      
-      // Applica immediatamente e poi periodicamente
-      forceCustomCursor();
-      const interval = setInterval(forceCustomCursor, 100);
       
       return () => {
-        clearInterval(interval);
         if (parentElement) {
-          parentElement.style.cursor = 'none';
-          document.body.style.cursor = 'none';
+          parentElement.style.cursor = 'auto';
         }
       };
     }
@@ -135,7 +120,7 @@ function Cursor({ ref, children, className, style, ...props }: CursorProps) {
     y.set(cursorPos.y);
   }, [cursorPos, x, y]);
 
-  // Rileva elementi cliccabili e gestisce drag & drop
+  // Rileva elementi cliccabili
   React.useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
@@ -152,39 +137,10 @@ function Cursor({ ref, children, className, style, ...props }: CursorProps) {
       setIsOverClickable(isClickable);
     };
 
-    // Gestisce drag & drop per mantenere il cursore sempre visibile
-    const handleDragStart = () => {
-      // Forza il cursore personalizzato durante il drag
-      document.body.style.cursor = 'none';
-    };
-
-    const handleDragEnd = () => {
-      // Mantiene il cursore personalizzato dopo il drag
-      document.body.style.cursor = 'none';
-    };
-
-    const handleMouseDown = () => {
-      // Assicura che il cursore rimanga visibile durante il click
-      document.body.style.cursor = 'none';
-    };
-
-    const handleMouseUp = () => {
-      // Mantiene il cursore personalizzato dopo il click
-      document.body.style.cursor = 'none';
-    };
-
     document.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('dragstart', handleDragStart);
-    document.addEventListener('dragend', handleDragEnd);
-    document.addEventListener('mousedown', handleMouseDown);
-    document.addEventListener('mouseup', handleMouseUp);
     
     return () => {
       document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('dragstart', handleDragStart);
-      document.removeEventListener('dragend', handleDragEnd);
-      document.removeEventListener('mousedown', handleMouseDown);
-      document.removeEventListener('mouseup', handleMouseUp);
     };
   }, []);
  
@@ -192,7 +148,7 @@ function Cursor({ ref, children, className, style, ...props }: CursorProps) {
     <AnimatePresence>
       {isActive && (
         <motion.div
-          ref={cursorRef as any}
+          ref={cursorRef as React.Ref<HTMLDivElement>}
           data-slot="cursor"
           className={cn(
             'transform-[translate(-50%,-50%)] pointer-events-none z-[9999] absolute',
