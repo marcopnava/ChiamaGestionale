@@ -1,6 +1,7 @@
 'use client';
 import React from 'react';
 import { useRouter, usePathname } from 'next/navigation';
+import type { Route } from 'next';
 import { Dock, DockItem, DockIcon, DockLabel } from '@/components/ui/shadcn-io/dock';
 import {
   Home, Users, Package, ShoppingCart, BarChart3, MessageSquare,
@@ -10,22 +11,22 @@ import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 
 type DockEntry = {
-  href: string;
+  href: Route;
   label: string;
   icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
 };
 
 const DOCK_ITEMS: DockEntry[] = [
-  { href: '/', label: 'Home', icon: Home },
-  { href: '/customers', label: 'Clienti', icon: Users },
-  { href: '/products', label: 'Prodotti', icon: Package },
-  { href: '/sales', label: 'Vendite', icon: ShoppingCart },
-  { href: '/reports', label: 'Report', icon: BarChart3 },
-  { href: '/tickets', label: 'Ticket', icon: MessageSquare },
-  { href: '/roadmap', label: 'Roadmap', icon: GanttChartSquare },
-  { href: '/audit', label: 'Audit', icon: Shield },
-  { href: '/calendar', label: 'Calendario', icon: Calendar },
-  { href: '/settings', label: 'Impostazioni', icon: Settings },
+  { href: '/' as Route, label: 'Home', icon: Home },
+  { href: '/customers' as Route, label: 'Clienti', icon: Users },
+  { href: '/products' as Route, label: 'Prodotti', icon: Package },
+  { href: '/sales' as Route, label: 'Vendite', icon: ShoppingCart },
+  { href: '/reports' as Route, label: 'Report', icon: BarChart3 },
+  { href: '/tickets' as Route, label: 'Ticket', icon: MessageSquare },
+  { href: '/roadmap' as Route, label: 'Roadmap', icon: GanttChartSquare },
+  { href: '/audit' as Route, label: 'Audit', icon: Shield },
+  { href: '/calendar' as Route, label: 'Calendario', icon: Calendar },
+  { href: '/settings' as Route, label: 'Impostazioni', icon: Settings },
 ];
 
 export default function PlatformDock() {
@@ -38,42 +39,42 @@ export default function PlatformDock() {
       if (res.ok) {
         toast.success("Disconnesso");
         router.replace("/login");
-        router.refresh();
       } else {
         toast.error("Errore logout");
       }
-    } catch (error) {
+    } catch {
       toast.error("Errore logout");
     }
-  };
-
-  const handleNavigation = (href: string) => {
-    router.push(href as any);
   };
 
   return (
     <div
       className="
         fixed left-1/2 -translate-x-1/2
-        bottom-[max(12px,env(safe-area-inset-bottom))]
+        bottom-[max(16px,env(safe-area-inset-bottom))]
         z-50
       "
     >
-      <Dock distance={150} magnification={96} panelHeight={56}>
+      <Dock distance={180} magnification={110} panelHeight={64}>
         {DOCK_ITEMS.map(({ href, label, icon: Icon }) => {
           const active = pathname === href || (href !== '/' && pathname?.startsWith(href));
           return (
             <DockItem key={href}>
               <button
-                onClick={() => handleNavigation(href)}
+                onClick={() => router.push(href)}
                 aria-label={label}
                 className={cn(
-                  'group flex flex-col items-center gap-1 rounded-md px-1 py-1 transition',
-                  active && 'ring-2 ring-[hsl(var(--ring))] ring-offset-2 ring-offset-background'
+                  'group flex flex-col items-center gap-1 rounded-md px-2 py-1 transition focus:outline-none',
+                  active && 'ring-2 ring-primary ring-offset-2 ring-offset-background'
                 )}
               >
                 <DockIcon>
-                  <Icon className={cn('h-full w-full', active ? 'text-[hsl(var(--foreground))]' : 'text-[hsl(var(--foreground))]/80')} />
+                  <Icon
+                    className={cn(
+                      'h-full w-full transition-transform duration-200 ease-out group-hover:scale-125 group-hover:-translate-y-1',
+                      active ? 'text-primary' : 'text-muted-foreground group-hover:text-foreground'
+                    )}
+                  />
                 </DockIcon>
                 <DockLabel>{label}</DockLabel>
               </button>
@@ -81,17 +82,17 @@ export default function PlatformDock() {
           );
         })}
 
-        {/* Logout "subtle" */}
+        {/* Pulsante logout */}
         <DockItem>
           <button
             onClick={handleLogout}
             aria-label="Log out"
-            className="group flex flex-col items-center gap-1 rounded-md px-1 py-1"
+            className="group flex flex-col items-center gap-1 rounded-md px-2 py-1 focus:outline-none"
           >
             <DockIcon>
-              <LogOut className="h-full w-full text-[hsl(var(--foreground))]/70 group-hover:text-[hsl(var(--foreground))]" />
+              <LogOut className="h-full w-full text-muted-foreground transition-transform duration-200 ease-out group-hover:scale-125 group-hover:-translate-y-1 group-hover:text-red-500" />
             </DockIcon>
-            <DockLabel>Log out</DockLabel>
+            <DockLabel>Logout</DockLabel>
           </button>
         </DockItem>
       </Dock>

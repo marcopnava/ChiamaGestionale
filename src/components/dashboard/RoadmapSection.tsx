@@ -18,13 +18,11 @@ import {
   GanttFeatureList,
   GanttFeatureListGroup,
   GanttHeader,
-  GanttMarker,
   GanttProvider,
   GanttSidebar,
   GanttSidebarGroup,
   GanttSidebarItem,
   GanttTimeline,
-  GanttToday,
 } from '@/components/ui/shadcn-io/gantt';
 
 import {
@@ -34,6 +32,7 @@ import {
   ListItems,
   ListProvider,
 } from '@/components/ui/shadcn-io/list';
+
 import {
   Table,
   TableBody,
@@ -42,6 +41,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+
 import groupBy from 'lodash.groupby';
 import {
   CalendarIcon,
@@ -64,20 +64,18 @@ import {
 } from '@/components/ui/context-menu';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
-const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
-
-// Dati deterministici invece di faker
+// ----------------- DATI DEMO -----------------
 const statuses = [
-  { id: 'status-1', name: 'Planned', color: '#6B7280' },
+  { id: 'status-1', name: 'Planned',     color: '#6B7280' },
   { id: 'status-2', name: 'In Progress', color: '#F59E0B' },
-  { id: 'status-3', name: 'Done', color: '#10B981' },
+  { id: 'status-3', name: 'Done',        color: '#10B981' },
 ];
 
 const users = [
   { id: 'user-1', name: 'Mario Rossi', image: 'https://i.pravatar.cc/150?u=1' },
   { id: 'user-2', name: 'Anna Bianchi', image: 'https://i.pravatar.cc/150?u=2' },
-  { id: 'user-3', name: 'Luca Verdi', image: 'https://i.pravatar.cc/150?u=3' },
-  { id: 'user-4', name: 'Sofia Neri', image: 'https://i.pravatar.cc/150?u=4' },
+  { id: 'user-3', name: 'Luca Verdi',   image: 'https://i.pravatar.cc/150?u=3' },
+  { id: 'user-4', name: 'Sofia Neri',   image: 'https://i.pravatar.cc/150?u=4' },
 ];
 
 const exampleGroups = [
@@ -112,10 +110,10 @@ const exampleFeatures = [
     id: 'feature-1',
     name: 'Implementare autenticazione OAuth',
     startAt: new Date('2024-12-16'),
-    endAt: new Date('2024-12-18'),
-    status: statuses[0],
-    owner: users[0],
-    group: exampleGroups[0],
+    endAt:   new Date('2024-12-18'),
+    status:  statuses[0],
+    owner:   users[0],
+    group:   exampleGroups[0],
     product: exampleProducts[0],
     initiative: exampleInitiatives[0],
     release: exampleReleases[0],
@@ -124,10 +122,10 @@ const exampleFeatures = [
     id: 'feature-2',
     name: 'Ottimizzare performance database',
     startAt: new Date('2024-12-16'),
-    endAt: new Date('2024-12-20'),
-    status: statuses[1],
-    owner: users[1],
-    group: exampleGroups[1],
+    endAt:   new Date('2024-12-20'),
+    status:  statuses[1],
+    owner:   users[1],
+    group:   exampleGroups[1],
     product: exampleProducts[1],
     initiative: exampleInitiatives[1],
     release: exampleReleases[1],
@@ -136,10 +134,10 @@ const exampleFeatures = [
     id: 'feature-3',
     name: 'Creare dashboard analytics',
     startAt: new Date('2024-12-17'),
-    endAt: new Date('2024-12-19'),
-    status: statuses[2],
-    owner: users[2],
-    group: exampleGroups[2],
+    endAt:   new Date('2024-12-19'),
+    status:  statuses[2],
+    owner:   users[2],
+    group:   exampleGroups[2],
     product: exampleProducts[2],
     initiative: exampleInitiatives[0],
     release: exampleReleases[0],
@@ -148,10 +146,10 @@ const exampleFeatures = [
     id: 'feature-4',
     name: 'Testare API endpoints',
     startAt: new Date('2024-12-18'),
-    endAt: new Date('2024-12-22'),
-    status: statuses[0],
-    owner: users[3],
-    group: exampleGroups[3],
+    endAt:   new Date('2024-12-22'),
+    status:  statuses[0],
+    owner:   users[3],
+    group:   exampleGroups[3],
     product: exampleProducts[3],
     initiative: exampleInitiatives[1],
     release: exampleReleases[1],
@@ -160,10 +158,10 @@ const exampleFeatures = [
     id: 'feature-5',
     name: 'Fix bug login mobile',
     startAt: new Date('2024-12-19'),
-    endAt: new Date('2024-12-21'),
-    status: statuses[2],
-    owner: users[1],
-    group: exampleGroups[0],
+    endAt:   new Date('2024-12-21'),
+    status:  statuses[2],
+    owner:   users[1],
+    group:   exampleGroups[0],
     product: exampleProducts[1],
     initiative: exampleInitiatives[0],
     release: exampleReleases[2],
@@ -172,10 +170,10 @@ const exampleFeatures = [
     id: 'feature-6',
     name: 'Implementare notifiche push',
     startAt: new Date('2024-12-20'),
-    endAt: new Date('2024-12-23'),
-    status: statuses[0],
-    owner: users[2],
-    group: exampleGroups[1],
+    endAt:   new Date('2024-12-23'),
+    status:  statuses[0],
+    owner:   users[2],
+    group:   exampleGroups[1],
     product: exampleProducts[0],
     initiative: exampleInitiatives[1],
     release: exampleReleases[2],
@@ -184,10 +182,10 @@ const exampleFeatures = [
     id: 'feature-7',
     name: 'Refactoring codice legacy',
     startAt: new Date('2024-12-21'),
-    endAt: new Date('2024-12-24'),
-    status: statuses[1],
-    owner: users[3],
-    group: exampleGroups[4],
+    endAt:   new Date('2024-12-24'),
+    status:  statuses[1],
+    owner:   users[3],
+    group:   exampleGroups[4],
     product: exampleProducts[2],
     initiative: exampleInitiatives[0],
     release: exampleReleases[0],
@@ -196,10 +194,10 @@ const exampleFeatures = [
     id: 'feature-8',
     name: 'Setup CI/CD pipeline',
     startAt: new Date('2024-12-22'),
-    endAt: new Date('2024-12-25'),
-    status: statuses[2],
-    owner: users[0],
-    group: exampleGroups[4],
+    endAt:   new Date('2024-12-25'),
+    status:  statuses[2],
+    owner:   users[0],
+    group:   exampleGroups[4],
     product: exampleProducts[3],
     initiative: exampleInitiatives[1],
     release: exampleReleases[1],
@@ -208,10 +206,10 @@ const exampleFeatures = [
     id: 'feature-9',
     name: 'Ottimizzare SEO',
     startAt: new Date('2024-12-23'),
-    endAt: new Date('2024-12-26'),
-    status: statuses[0],
-    owner: users[1],
-    group: exampleGroups[2],
+    endAt:   new Date('2024-12-26'),
+    status:  statuses[0],
+    owner:   users[1],
+    group:   exampleGroups[2],
     product: exampleProducts[0],
     initiative: exampleInitiatives[0],
     release: exampleReleases[2],
@@ -220,10 +218,10 @@ const exampleFeatures = [
     id: 'feature-10',
     name: 'Testare responsive design',
     startAt: new Date('2024-12-24'),
-    endAt: new Date('2024-12-27'),
-    status: statuses[2],
-    owner: users[2],
-    group: exampleGroups[3],
+    endAt:   new Date('2024-12-27'),
+    status:  statuses[2],
+    owner:   users[2],
+    group:   exampleGroups[3],
     product: exampleProducts[1],
     initiative: exampleInitiatives[1],
     release: exampleReleases[0],
@@ -232,10 +230,10 @@ const exampleFeatures = [
     id: 'feature-11',
     name: 'Implementare dark mode',
     startAt: new Date('2024-12-25'),
-    endAt: new Date('2024-12-28'),
-    status: statuses[1],
-    owner: users[3],
-    group: exampleGroups[0],
+    endAt:   new Date('2024-12-28'),
+    status:  statuses[1],
+    owner:   users[3],
+    group:   exampleGroups[0],
     product: exampleProducts[2],
     initiative: exampleInitiatives[0],
     release: exampleReleases[1],
@@ -244,10 +242,10 @@ const exampleFeatures = [
     id: 'feature-12',
     name: 'Aggiornare dipendenze',
     startAt: new Date('2024-12-26'),
-    endAt: new Date('2024-12-29'),
-    status: statuses[0],
-    owner: users[0],
-    group: exampleGroups[4],
+    endAt:   new Date('2024-12-29'),
+    status:  statuses[0],
+    owner:   users[0],
+    group:   exampleGroups[4],
     product: exampleProducts[3],
     initiative: exampleInitiatives[1],
     release: exampleReleases[2],
@@ -256,10 +254,10 @@ const exampleFeatures = [
     id: 'feature-13',
     name: 'Creare backup automatici',
     startAt: new Date('2024-12-27'),
-    endAt: new Date('2024-12-30'),
-    status: statuses[1],
-    owner: users[1],
-    group: exampleGroups[4],
+    endAt:   new Date('2024-12-30'),
+    status:  statuses[1],
+    owner:   users[1],
+    group:   exampleGroups[4],
     product: exampleProducts[0],
     initiative: exampleInitiatives[0],
     release: exampleReleases[0],
@@ -268,10 +266,10 @@ const exampleFeatures = [
     id: 'feature-14',
     name: 'Implementare logging',
     startAt: new Date('2024-12-28'),
-    endAt: new Date('2024-12-31'),
-    status: statuses[2],
-    owner: users[2],
-    group: exampleGroups[1],
+    endAt:   new Date('2024-12-31'),
+    status:  statuses[2],
+    owner:   users[2],
+    group:   exampleGroups[1],
     product: exampleProducts[1],
     initiative: exampleInitiatives[1],
     release: exampleReleases[1],
@@ -280,62 +278,21 @@ const exampleFeatures = [
     id: 'feature-15',
     name: 'Aggiornare documentazione',
     startAt: new Date('2024-12-29'),
-    endAt: new Date('2025-01-02'),
-    status: statuses[1],
-    owner: users[0],
-    group: exampleGroups[5],
+    endAt:   new Date('2025-01-02'),
+    status:  statuses[1],
+    owner:   users[0],
+    group:   exampleGroups[5],
     product: exampleProducts[2],
     initiative: exampleInitiatives[0],
     release: exampleReleases[2],
   },
 ];
 
-const exampleMarkers = [
-  {
-    id: 'marker-1',
-    date: new Date('2024-12-20'),
-    label: 'Sprint Review',
-    className: 'bg-blue-100 text-blue-900',
-  },
-  {
-    id: 'marker-2',
-    date: new Date('2024-08-30'),
-    label: 'Release v2.1.0',
-    className: 'bg-green-100 text-green-900',
-  },
-  {
-    id: 'marker-3',
-    date: new Date('2024-09-15'),
-    label: 'Sprint Planning',
-    className: 'bg-purple-100 text-purple-900',
-  },
-  {
-    id: 'marker-4',
-    date: new Date('2024-09-30'),
-    label: 'Release v2.2.0',
-    className: 'bg-red-100 text-red-900',
-  },
-  {
-    id: 'marker-5',
-    date: new Date('2024-10-15'),
-    label: 'Q4 Planning',
-    className: 'bg-orange-100 text-orange-900',
-  },
-  {
-    id: 'marker-6',
-    date: new Date('2024-10-30'),
-    label: 'Release v2.3.0',
-    className: 'bg-teal-100 text-teal-900',
-  },
-];
-
+// ---------- GANTT ----------
 const GanttView = () => {
   const [features, setFeatures] = useState(exampleFeatures);
   const [isClient, setIsClient] = useState(false);
-
-  React.useEffect(() => {
-    setIsClient(true);
-  }, []);
+  React.useEffect(() => setIsClient(true), []);
 
   const groupedFeatures = groupBy(features, 'group.name');
   const sortedGroupedFeatures = Object.fromEntries(
@@ -344,28 +301,20 @@ const GanttView = () => {
     )
   );
 
-  const handleViewFeature = (id: string) =>
-    console.log(`Feature selected: ${id}`);
+  const handleViewFeature = (id: string) => console.log(`Feature selected: ${id}`);
   const handleCopyLink = (id: string) => console.log(`Copy link: ${id}`);
   const handleRemoveFeature = (id: string) =>
     setFeatures((prev) => prev.filter((feature) => feature.id !== id));
-  const handleRemoveMarker = (id: string) =>
-    console.log(`Remove marker: ${id}`);
   const handleCreateMarker = (date: Date) =>
     console.log(`Create marker: ${date.toISOString()}`);
   const handleMoveFeature = (id: string, startAt: Date, endAt: Date | null) => {
-    if (!endAt) {
-      return;
-    }
+    if (!endAt) return;
     setFeatures((prev) =>
       prev.map((feature) =>
         feature.id === id ? { ...feature, startAt, endAt } : feature
       )
     );
-    console.log(`Move feature: ${id} from ${startAt} to ${endAt}`);
   };
-  const handleAddFeature = (date: Date) =>
-    console.log(`Add feature: ${date.toISOString()}`);
 
   if (!isClient) {
     return (
@@ -376,99 +325,94 @@ const GanttView = () => {
   }
 
   return (
-    <GanttProvider
-      className="rounded-none"
-      onAddItem={handleAddFeature}
-      range="monthly"
-      zoom={100}
-    >
-      <GanttSidebar>
-        {Object.entries(sortedGroupedFeatures).map(([group, features]) => (
-          <GanttSidebarGroup key={group} name={group}>
-            {features.map((feature) => (
-              <GanttSidebarItem
-                feature={feature}
-                key={feature.id}
-                onSelectItem={handleViewFeature}
-              />
-            ))}
-          </GanttSidebarGroup>
-        ))}
-      </GanttSidebar>
-      <GanttTimeline>
-        <GanttHeader />
-        <GanttFeatureList>
+    <div className="h-full overflow-hidden">
+      <GanttProvider
+        className="h-full rounded-none"
+        onAddItem={() => {}}
+        range="monthly"
+        zoom={100}
+      >
+        <GanttSidebar>
           {Object.entries(sortedGroupedFeatures).map(([group, features]) => (
-            <GanttFeatureListGroup key={group}>
+            <GanttSidebarGroup key={group} name={group}>
               {features.map((feature) => (
-                <div className="flex" key={feature.id}>
-                  <ContextMenu>
-                    <ContextMenuTrigger asChild>
-                      <button
-                        onClick={() => handleViewFeature(feature.id)}
-                        type="button"
-                      >
-                        <GanttFeatureItem
-                          feature={feature}
-                          onMove={handleMoveFeature}
-                        >
-                          <p className="flex-1 truncate text-xs">
-                            {feature.name}
-                          </p>
-                          {feature.owner && (
-                            <Avatar className="h-4 w-4">
-                              <AvatarImage src={feature.owner.image} />
-                              <AvatarFallback>
-                                {feature.owner.name?.slice(0, 2)}
-                              </AvatarFallback>
-                            </Avatar>
-                          )}
-                        </GanttFeatureItem>
-                      </button>
-                    </ContextMenuTrigger>
-                    <ContextMenuContent>
-                      <ContextMenuItem
-                        className="flex items-center gap-2"
-                        onClick={() => handleViewFeature(feature.id)}
-                      >
-                        <EyeIcon className="text-muted-foreground" size={16} />
-                        View feature
-                      </ContextMenuItem>
-                      <ContextMenuItem
-                        className="flex items-center gap-2"
-                        onClick={() => handleCopyLink(feature.id)}
-                      >
-                        <LinkIcon className="text-muted-foreground" size={16} />
-                        Copy link
-                      </ContextMenuItem>
-                      <ContextMenuItem
-                        className="flex items-center gap-2 text-destructive"
-                        onClick={() => handleRemoveFeature(feature.id)}
-                      >
-                        <TrashIcon size={16} />
-                        Remove from roadmap
-                      </ContextMenuItem>
-                    </ContextMenuContent>
-                  </ContextMenu>
-                </div>
+                <GanttSidebarItem
+                  feature={feature}
+                  key={feature.id}
+                  onSelectItem={handleViewFeature}
+                />
               ))}
-            </GanttFeatureListGroup>
+            </GanttSidebarGroup>
           ))}
-        </GanttFeatureList>
-        {exampleMarkers.map((marker) => (
-          <GanttMarker
-            key={marker.id}
-            marker={marker}
-            onRemove={handleRemoveMarker}
-          />
-        ))}
-        <GanttToday />
-        <GanttCreateMarkerTrigger onCreateMarker={handleCreateMarker} />
-      </GanttTimeline>
-    </GanttProvider>
+        </GanttSidebar>
+        <GanttTimeline>
+          <GanttHeader />
+          <GanttFeatureList>
+            {Object.entries(sortedGroupedFeatures).map(([group, features]) => (
+              <GanttFeatureListGroup key={group}>
+                {features.map((feature) => (
+                  <div className="flex" key={feature.id}>
+                    <ContextMenu>
+                      <ContextMenuTrigger asChild>
+                        <button
+                          onClick={() => handleViewFeature(feature.id)}
+                          type="button"
+                        >
+                          <GanttFeatureItem
+                            feature={feature}
+                            onMove={handleMoveFeature}
+                          >
+                            <p className="flex-1 truncate text-xs">
+                              {feature.name}
+                            </p>
+                            {feature.owner && (
+                              <Avatar className="h-4 w-4">
+                                <AvatarImage src={feature.owner.image} />
+                                <AvatarFallback>
+                                  {feature.owner.name?.slice(0, 2)}
+                                </AvatarFallback>
+                              </Avatar>
+                            )}
+                          </GanttFeatureItem>
+                        </button>
+                      </ContextMenuTrigger>
+                      <ContextMenuContent>
+                        <ContextMenuItem
+                          className="flex items-center gap-2"
+                          onClick={() => handleViewFeature(feature.id)}
+                        >
+                          <EyeIcon className="text-muted-foreground" size={16} />
+                          View feature
+                        </ContextMenuItem>
+                        <ContextMenuItem
+                          className="flex items-center gap-2"
+                          onClick={() => handleCopyLink(feature.id)}
+                        >
+                          <LinkIcon className="text-muted-foreground" size={16} />
+                          Copy link
+                        </ContextMenuItem>
+                        <ContextMenuItem
+                          className="flex items-center gap-2 text-destructive"
+                          onClick={() => handleRemoveFeature(feature.id)}
+                        >
+                          <TrashIcon size={16} />
+                          Remove from roadmap
+                        </ContextMenuItem>
+                      </ContextMenuContent>
+                    </ContextMenu>
+                  </div>
+                ))}
+              </GanttFeatureListGroup>
+            ))}
+          </GanttFeatureList>
+          <GanttCreateMarkerTrigger onCreateMarker={handleCreateMarker} />
+        </GanttTimeline>
+      </GanttProvider>
+    </div>
   );
 };
 
+// ---------- CALENDAR ----------
 const earliestYear =
   exampleFeatures
     .map((feature) => feature.startAt.getFullYear())
@@ -482,10 +426,7 @@ const latestYear =
 
 const CalendarView = () => {
   const [isClient, setIsClient] = useState(false);
-
-  React.useEffect(() => {
-    setIsClient(true);
-  }, []);
+  React.useEffect(() => setIsClient(true), []);
 
   if (!isClient) {
     return (
@@ -496,47 +437,45 @@ const CalendarView = () => {
   }
 
   return (
-    <CalendarProvider>
-      <CalendarDate>
-        <CalendarDatePicker>
-          <CalendarMonthPicker />
-          <CalendarYearPicker end={latestYear} start={earliestYear} />
-        </CalendarDatePicker>
-        <CalendarDatePagination />
-      </CalendarDate>
-      <CalendarHeader />
-      <CalendarBody features={exampleFeatures}>
-        {({ feature }) => <CalendarItem feature={feature} key={feature.id} />}
-      </CalendarBody>
-    </CalendarProvider>
+    <div className="h-full overflow-auto">
+      <CalendarProvider>
+        <CalendarDate>
+          <CalendarDatePicker>
+            <CalendarMonthPicker />
+            <CalendarYearPicker end={latestYear} start={earliestYear} />
+          </CalendarDatePicker>
+          <CalendarDatePagination />
+        </CalendarDate>
+        <CalendarHeader />
+        <CalendarBody features={exampleFeatures}>
+          {({ feature }) => <CalendarItem feature={feature} key={feature.id} />}
+        </CalendarBody>
+      </CalendarProvider>
+    </div>
   );
 };
 
+// ---------- LIST (con DnD) ----------
 const ListView = () => {
   const [features, setFeatures] = useState(exampleFeatures);
   const [isClient, setIsClient] = useState(false);
-
-  React.useEffect(() => {
-    setIsClient(true);
-  }, []);
+  React.useEffect(() => setIsClient(true), []);
 
   const handleDragEnd = (event: any) => {
     const { active, over } = event;
-    if (!over) {
-      return;
-    }
-    const status = statuses.find((status) => status.name === over.id);
-    if (!status) {
-      return;
-    }
-    setFeatures(
-      features.map((feature) => {
-        if (feature.id === active.id) {
-          return { ...feature, status };
-        }
-        return feature;
-      })
-    );
+    if (!over) return;
+
+    const newStatus = statuses.find((s) => s.name === over.id);
+    if (!newStatus) return;
+
+    setFeatures((prev) => {
+      const updated = prev.filter((f) => f.id !== active.id);
+      const moved = prev.find((f) => f.id === active.id);
+      if (moved) {
+        updated.push({ ...moved, status: newStatus });
+      }
+      return updated;
+    });
   };
 
   if (!isClient) {
@@ -548,53 +487,55 @@ const ListView = () => {
   }
 
   return (
-    <ListProvider className="overflow-auto" onDragEnd={handleDragEnd}>
-      {statuses.map((status) => (
-        <ListGroup id={status.name} key={status.name}>
-          <ListHeader color={status.color} name={status.name}>
-            <span>{status.name}</span>
-          </ListHeader>
-          <ListItems>
-            {features
-              .filter((feature) => feature.status.name === status.name)
-              .map((feature, index) => (
-                <ListItem
-                  id={feature.id}
-                  index={index}
-                  key={feature.id}
-                  name={feature.name}
-                  parent={feature.status.name}
-                >
-                  <div
-                    className="h-2 w-2 shrink-0 rounded-full"
-                    style={{ backgroundColor: feature.status.color }}
-                  />
-                  <p className="m-0 flex-1 font-medium text-sm">
-                    {feature.name}
-                  </p>
-                  {feature.owner && (
-                    <Avatar className="h-4 w-4 shrink-0">
-                      <AvatarImage src={feature.owner.image} />
-                      <AvatarFallback>
-                        {feature.owner.name?.slice(0, 2)}
-                      </AvatarFallback>
-                    </Avatar>
-                  )}
-                </ListItem>
-              ))}
-          </ListItems>
-        </ListGroup>
-      ))}
-    </ListProvider>
+    <div className="h-full overflow-hidden">
+      <ListProvider className="h-full overflow-x-auto" onDragEnd={handleDragEnd}>
+        {statuses.map((status) => (
+          <ListGroup id={status.name} key={status.name}>
+            <ListHeader color={status.color} name={status.name}>
+              <span>{status.name}</span>
+            </ListHeader>
+            <ListItems>
+              {features
+                .filter((feature) => feature.status.name === status.name)
+                .map((feature, index) => (
+                  <ListItem
+                    id={feature.id}
+                    index={index}
+                    key={feature.id}
+                    name={feature.name}
+                    parent={feature.status.name}
+                  >
+                    <div
+                      className="h-2 w-2 shrink-0 rounded-full"
+                      style={{ backgroundColor: feature.status.color }}
+                    />
+                    <p className="m-0 flex-1 font-medium text-sm">
+                      {feature.name}
+                    </p>
+                    {feature.owner && (
+                      <Avatar className="h-4 w-4 shrink-0">
+                        <AvatarImage src={feature.owner.image} />
+                        <AvatarFallback>
+                          {feature.owner.name?.slice(0, 2)}
+                        </AvatarFallback>
+                      </Avatar>
+                    )}
+                  </ListItem>
+                ))}
+            </ListItems>
+          </ListGroup>
+        ))}
+      </ListProvider>
+    </div>
   );
 };
 
+// ---------- KANBAN STATICO ----------
 const dateFormatter = new Intl.DateTimeFormat('en-US', {
   month: 'short',
   day: 'numeric',
   year: 'numeric',
 });
-
 const shortDateFormatter = new Intl.DateTimeFormat('en-US', {
   month: 'short',
   day: 'numeric',
@@ -602,10 +543,7 @@ const shortDateFormatter = new Intl.DateTimeFormat('en-US', {
 
 const KanbanView = () => {
   const [isClient, setIsClient] = useState(false);
-
-  React.useEffect(() => {
-    setIsClient(true);
-  }, []);
+  React.useEffect(() => setIsClient(true), []);
 
   if (!isClient) {
     return (
@@ -616,7 +554,7 @@ const KanbanView = () => {
   }
 
   return (
-    <div className="p-4">
+    <div className="h-full overflow-auto p-4">
       <div className="flex gap-4">
         {statuses.map((status) => (
           <div key={status.id} className="flex flex-col w-80 bg-muted/50 rounded-lg border">
@@ -661,12 +599,10 @@ const KanbanView = () => {
   );
 };
 
+// ---------- TABLE ----------
 const TableView = () => {
   const [isClient, setIsClient] = useState(false);
-
-  React.useEffect(() => {
-    setIsClient(true);
-  }, []);
+  React.useEffect(() => setIsClient(true), []);
 
   if (!isClient) {
     return (
@@ -677,7 +613,7 @@ const TableView = () => {
   }
 
   return (
-    <div className="size-full overflow-auto">
+    <div className="h-full w-full overflow-auto">
       <Table>
         <TableHeader>
           <TableRow>
@@ -735,44 +671,17 @@ const TableView = () => {
   );
 };
 
+// ---------- ROOT ----------
 const RoadmapSection = () => {
   const [isClient, setIsClient] = useState(false);
-
-  React.useEffect(() => {
-    setIsClient(true);
-  }, []);
+  React.useEffect(() => setIsClient(true), []);
 
   const views = [
-    {
-      id: 'gantt',
-      label: 'Gantt',
-      icon: GanttChartSquareIcon,
-      component: GanttView,
-    },
-    {
-      id: 'calendar',
-      label: 'Calendar',
-      icon: CalendarIcon,
-      component: CalendarView,
-    },
-    {
-      id: 'list',
-      label: 'List',
-      icon: ListIcon,
-      component: ListView,
-    },
-    {
-      id: 'kanban',
-      label: 'Kanban',
-      icon: KanbanSquareIcon,
-      component: KanbanView,
-    },
-    {
-      id: 'table',
-      label: 'Table',
-      icon: TableIcon,
-      component: TableView,
-    },
+    { id: 'gantt',   label: 'Gantt',   icon: GanttChartSquareIcon, component: GanttView },
+    { id: 'calendar',label: 'Calendar',icon: CalendarIcon,         component: CalendarView },
+    { id: 'list',    label: 'List',    icon: ListIcon,             component: ListView },
+    { id: 'kanban',  label: 'Kanban',  icon: KanbanSquareIcon,     component: KanbanView },
+    { id: 'table',   label: 'Table',   icon: TableIcon,            component: TableView },
   ];
 
   if (!isClient) {
@@ -784,8 +693,11 @@ const RoadmapSection = () => {
   }
 
   return (
-    <Tabs className="not-prose size-full gap-0 divide-y" defaultValue="gantt">
-      <div className="flex items-center justify-between gap-4 p-4">
+    <Tabs
+      defaultValue="gantt"
+      className="not-prose w-full flex flex-col min-h-[680px] max-h-[calc(100vh-160px)]"
+    >
+      <div className="flex items-center justify-between gap-4 p-4 border-b">
         <p className="font-medium">Roadmap</p>
         <TabsList>
           {views.map((view) => (
@@ -796,13 +708,16 @@ const RoadmapSection = () => {
           ))}
         </TabsList>
       </div>
-      {views.map((view) => (
-        <TabsContent className="overflow-hidden" key={view.id} value={view.id}>
-          <view.component />
-        </TabsContent>
-      ))}
+
+      <div className="flex-1 min-h-0">
+        {views.map((view) => (
+          <TabsContent className="h-full overflow-hidden" key={view.id} value={view.id}>
+            <view.component />
+          </TabsContent>
+        ))}
+      </div>
     </Tabs>
   );
 };
 
-export default RoadmapSection; 
+export default RoadmapSection;
