@@ -1,6 +1,6 @@
 'use client';
 
-import { faker } from '@faker-js/faker';
+import * as React from 'react';
 import {
   CalendarBody,
   CalendarDate,
@@ -66,81 +66,277 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
 
+// Dati deterministici invece di faker
 const statuses = [
-  { id: faker.string.uuid(), name: 'Planned', color: '#6B7280' },
-  { id: faker.string.uuid(), name: 'In Progress', color: '#F59E0B' },
-  { id: faker.string.uuid(), name: 'Done', color: '#10B981' },
+  { id: 'status-1', name: 'Planned', color: '#6B7280' },
+  { id: 'status-2', name: 'In Progress', color: '#F59E0B' },
+  { id: 'status-3', name: 'Done', color: '#10B981' },
 ];
 
-const users = Array.from({ length: 4 })
-  .fill(null)
-  .map(() => ({
-    id: faker.string.uuid(),
-    name: faker.person.fullName(),
-    image: faker.image.avatar(),
-  }));
+const users = [
+  { id: 'user-1', name: 'Mario Rossi', image: 'https://i.pravatar.cc/150?u=1' },
+  { id: 'user-2', name: 'Anna Bianchi', image: 'https://i.pravatar.cc/150?u=2' },
+  { id: 'user-3', name: 'Luca Verdi', image: 'https://i.pravatar.cc/150?u=3' },
+  { id: 'user-4', name: 'Sofia Neri', image: 'https://i.pravatar.cc/150?u=4' },
+];
 
-const exampleGroups = Array.from({ length: 6 })
-  .fill(null)
-  .map(() => ({
-    id: faker.string.uuid(),
-    name: capitalize(faker.company.buzzPhrase()),
-  }));
+const exampleGroups = [
+  { id: 'group-1', name: 'Frontend Development' },
+  { id: 'group-2', name: 'Backend Development' },
+  { id: 'group-3', name: 'UI/UX Design' },
+  { id: 'group-4', name: 'Testing & QA' },
+  { id: 'group-5', name: 'DevOps' },
+  { id: 'group-6', name: 'Documentation' },
+];
 
-const exampleProducts = Array.from({ length: 4 })
-  .fill(null)
-  .map(() => ({
-    id: faker.string.uuid(),
-    name: capitalize(faker.company.buzzPhrase()),
-  }));
+const exampleProducts = [
+  { id: 'product-1', name: 'Chiama.io Platform' },
+  { id: 'product-2', name: 'Mobile App' },
+  { id: 'product-3', name: 'Admin Dashboard' },
+  { id: 'product-4', name: 'API Gateway' },
+];
 
-const exampleInitiatives = Array.from({ length: 2 })
-  .fill(null)
-  .map(() => ({
-    id: faker.string.uuid(),
-    name: capitalize(faker.company.buzzPhrase()),
-  }));
+const exampleInitiatives = [
+  { id: 'initiative-1', name: 'Q4 2024 Release' },
+  { id: 'initiative-2', name: 'Performance Optimization' },
+];
 
-const exampleReleases = Array.from({ length: 3 })
-  .fill(null)
-  .map(() => ({
-    id: faker.string.uuid(),
-    name: capitalize(faker.company.buzzPhrase()),
-  }));
+const exampleReleases = [
+  { id: 'release-1', name: 'v2.1.0' },
+  { id: 'release-2', name: 'v2.2.0' },
+  { id: 'release-3', name: 'v2.3.0' },
+];
 
-const exampleFeatures = Array.from({ length: 20 })
-  .fill(null)
-  .map(() => ({
-    id: faker.string.uuid(),
-    name: capitalize(faker.company.buzzPhrase()),
-    startAt: faker.date.past({ years: 0.5, refDate: new Date() }),
-    endAt: faker.date.future({ years: 0.5, refDate: new Date() }),
-    status: faker.helpers.arrayElement(statuses),
-    owner: faker.helpers.arrayElement(users),
-    group: faker.helpers.arrayElement(exampleGroups),
-    product: faker.helpers.arrayElement(exampleProducts),
-    initiative: faker.helpers.arrayElement(exampleInitiatives),
-    release: faker.helpers.arrayElement(exampleReleases),
-  }));
+const exampleFeatures = [
+  {
+    id: 'feature-1',
+    name: 'Implementare autenticazione OAuth',
+    startAt: new Date('2024-08-26'),
+    endAt: new Date('2024-09-03'),
+    status: statuses[0],
+    owner: users[0],
+    group: exampleGroups[0],
+    product: exampleProducts[0],
+    initiative: exampleInitiatives[0],
+    release: exampleReleases[0],
+  },
+  {
+    id: 'feature-2',
+    name: 'Ottimizzare performance database',
+    startAt: new Date('2024-08-24'),
+    endAt: new Date('2024-09-06'),
+    status: statuses[1],
+    owner: users[1],
+    group: exampleGroups[1],
+    product: exampleProducts[1],
+    initiative: exampleInitiatives[1],
+    release: exampleReleases[1],
+  },
+  {
+    id: 'feature-3',
+    name: 'Creare dashboard analytics',
+    startAt: new Date('2024-08-22'),
+    endAt: new Date('2024-09-09'),
+    status: statuses[2],
+    owner: users[2],
+    group: exampleGroups[2],
+    product: exampleProducts[2],
+    initiative: exampleInitiatives[0],
+    release: exampleReleases[0],
+  },
+  {
+    id: 'feature-4',
+    name: 'Testare API endpoints',
+    startAt: new Date('2024-08-20'),
+    endAt: new Date('2024-09-12'),
+    status: statuses[0],
+    owner: users[3],
+    group: exampleGroups[3],
+    product: exampleProducts[3],
+    initiative: exampleInitiatives[1],
+    release: exampleReleases[1],
+  },
+  {
+    id: 'feature-5',
+    name: 'Fix bug login mobile',
+    startAt: new Date('2024-08-16'),
+    endAt: new Date('2024-09-18'),
+    status: statuses[2],
+    owner: users[1],
+    group: exampleGroups[0],
+    product: exampleProducts[1],
+    initiative: exampleInitiatives[0],
+    release: exampleReleases[2],
+  },
+  {
+    id: 'feature-6',
+    name: 'Implementare notifiche push',
+    startAt: new Date('2024-08-14'),
+    endAt: new Date('2024-09-21'),
+    status: statuses[0],
+    owner: users[2],
+    group: exampleGroups[1],
+    product: exampleProducts[0],
+    initiative: exampleInitiatives[1],
+    release: exampleReleases[2],
+  },
+  {
+    id: 'feature-7',
+    name: 'Refactoring codice legacy',
+    startAt: new Date('2024-08-12'),
+    endAt: new Date('2024-09-24'),
+    status: statuses[1],
+    owner: users[3],
+    group: exampleGroups[4],
+    product: exampleProducts[2],
+    initiative: exampleInitiatives[0],
+    release: exampleReleases[0],
+  },
+  {
+    id: 'feature-8',
+    name: 'Setup CI/CD pipeline',
+    startAt: new Date('2024-08-10'),
+    endAt: new Date('2024-09-27'),
+    status: statuses[2],
+    owner: users[0],
+    group: exampleGroups[4],
+    product: exampleProducts[3],
+    initiative: exampleInitiatives[1],
+    release: exampleReleases[1],
+  },
+  {
+    id: 'feature-9',
+    name: 'Ottimizzare SEO',
+    startAt: new Date('2024-08-08'),
+    endAt: new Date('2024-09-30'),
+    status: statuses[0],
+    owner: users[1],
+    group: exampleGroups[2],
+    product: exampleProducts[0],
+    initiative: exampleInitiatives[0],
+    release: exampleReleases[2],
+  },
+  {
+    id: 'feature-10',
+    name: 'Testare responsive design',
+    startAt: new Date('2024-08-04'),
+    endAt: new Date('2024-10-06'),
+    status: statuses[2],
+    owner: users[2],
+    group: exampleGroups[3],
+    product: exampleProducts[1],
+    initiative: exampleInitiatives[1],
+    release: exampleReleases[0],
+  },
+  {
+    id: 'feature-11',
+    name: 'Implementare dark mode',
+    startAt: new Date('2024-08-06'),
+    endAt: new Date('2024-10-03'),
+    status: statuses[1],
+    owner: users[3],
+    group: exampleGroups[0],
+    product: exampleProducts[2],
+    initiative: exampleInitiatives[0],
+    release: exampleReleases[1],
+  },
+  {
+    id: 'feature-12',
+    name: 'Aggiornare dipendenze',
+    startAt: new Date('2024-08-02'),
+    endAt: new Date('2024-10-09'),
+    status: statuses[0],
+    owner: users[0],
+    group: exampleGroups[4],
+    product: exampleProducts[3],
+    initiative: exampleInitiatives[1],
+    release: exampleReleases[2],
+  },
+  {
+    id: 'feature-13',
+    name: 'Creare backup automatici',
+    startAt: new Date('2024-07-31'),
+    endAt: new Date('2024-10-12'),
+    status: statuses[1],
+    owner: users[1],
+    group: exampleGroups[4],
+    product: exampleProducts[0],
+    initiative: exampleInitiatives[0],
+    release: exampleReleases[0],
+  },
+  {
+    id: 'feature-14',
+    name: 'Implementare logging',
+    startAt: new Date('2024-07-29'),
+    endAt: new Date('2024-10-15'),
+    status: statuses[2],
+    owner: users[2],
+    group: exampleGroups[1],
+    product: exampleProducts[1],
+    initiative: exampleInitiatives[1],
+    release: exampleReleases[1],
+  },
+  {
+    id: 'feature-15',
+    name: 'Aggiornare documentazione',
+    startAt: new Date('2024-08-18'),
+    endAt: new Date('2024-09-15'),
+    status: statuses[1],
+    owner: users[0],
+    group: exampleGroups[5],
+    product: exampleProducts[2],
+    initiative: exampleInitiatives[0],
+    release: exampleReleases[2],
+  },
+];
 
-const exampleMarkers = Array.from({ length: 6 })
-  .fill(null)
-  .map(() => ({
-    id: faker.string.uuid(),
-    date: faker.date.past({ years: 0.5, refDate: new Date() }),
-    label: capitalize(faker.company.buzzPhrase()),
-    className: faker.helpers.arrayElement([
-      'bg-blue-100 text-blue-900',
-      'bg-green-100 text-green-900',
-      'bg-purple-100 text-purple-900',
-      'bg-red-100 text-red-900',
-      'bg-orange-100 text-orange-900',
-      'bg-teal-100 text-teal-900',
-    ]),
-  }));
+const exampleMarkers = [
+  {
+    id: 'marker-1',
+    date: new Date('2024-08-15'),
+    label: 'Sprint Review',
+    className: 'bg-blue-100 text-blue-900',
+  },
+  {
+    id: 'marker-2',
+    date: new Date('2024-08-30'),
+    label: 'Release v2.1.0',
+    className: 'bg-green-100 text-green-900',
+  },
+  {
+    id: 'marker-3',
+    date: new Date('2024-09-15'),
+    label: 'Sprint Planning',
+    className: 'bg-purple-100 text-purple-900',
+  },
+  {
+    id: 'marker-4',
+    date: new Date('2024-09-30'),
+    label: 'Release v2.2.0',
+    className: 'bg-red-100 text-red-900',
+  },
+  {
+    id: 'marker-5',
+    date: new Date('2024-10-15'),
+    label: 'Q4 Planning',
+    className: 'bg-orange-100 text-orange-900',
+  },
+  {
+    id: 'marker-6',
+    date: new Date('2024-10-30'),
+    label: 'Release v2.3.0',
+    className: 'bg-teal-100 text-teal-900',
+  },
+];
 
 const GanttView = () => {
   const [features, setFeatures] = useState(exampleFeatures);
+  const [isClient, setIsClient] = useState(false);
+
+  React.useEffect(() => {
+    setIsClient(true);
+  }, []);
+
   const groupedFeatures = groupBy(features, 'group.name');
   const sortedGroupedFeatures = Object.fromEntries(
     Object.entries(groupedFeatures).sort(([nameA], [nameB]) =>
@@ -170,6 +366,14 @@ const GanttView = () => {
   };
   const handleAddFeature = (date: Date) =>
     console.log(`Add feature: ${date.toISOString()}`);
+
+  if (!isClient) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-muted-foreground">Caricamento Gantt...</div>
+      </div>
+    );
+  }
 
   return (
     <GanttProvider
@@ -276,24 +480,45 @@ const latestYear =
     .sort()
     .at(-1) ?? new Date().getFullYear();
 
-const CalendarView = () => (
-  <CalendarProvider>
-    <CalendarDate>
-      <CalendarDatePicker>
-        <CalendarMonthPicker />
-        <CalendarYearPicker end={latestYear} start={earliestYear} />
-      </CalendarDatePicker>
-      <CalendarDatePagination />
-    </CalendarDate>
-    <CalendarHeader />
-    <CalendarBody features={exampleFeatures}>
-      {({ feature }) => <CalendarItem feature={feature} key={feature.id} />}
-    </CalendarBody>
-  </CalendarProvider>
-);
+const CalendarView = () => {
+  const [isClient, setIsClient] = useState(false);
+
+  React.useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  if (!isClient) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-muted-foreground">Caricamento Calendar...</div>
+      </div>
+    );
+  }
+
+  return (
+    <CalendarProvider>
+      <CalendarDate>
+        <CalendarDatePicker>
+          <CalendarMonthPicker />
+          <CalendarYearPicker end={latestYear} start={earliestYear} />
+        </CalendarDatePicker>
+        <CalendarDatePagination />
+      </CalendarDate>
+      <CalendarHeader />
+      <CalendarBody features={exampleFeatures}>
+        {({ feature }) => <CalendarItem feature={feature} key={feature.id} />}
+      </CalendarBody>
+    </CalendarProvider>
+  );
+};
 
 const ListView = () => {
   const [features, setFeatures] = useState(exampleFeatures);
+  const [isClient, setIsClient] = useState(false);
+
+  React.useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const handleDragEnd = (event: any) => {
     const { active, over } = event;
@@ -313,6 +538,14 @@ const ListView = () => {
       })
     );
   };
+
+  if (!isClient) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-muted-foreground">Caricamento List...</div>
+      </div>
+    );
+  }
 
   return (
     <ListProvider className="overflow-auto" onDragEnd={handleDragEnd}>
@@ -368,6 +601,20 @@ const shortDateFormatter = new Intl.DateTimeFormat('en-US', {
 });
 
 const KanbanView = () => {
+  const [isClient, setIsClient] = useState(false);
+
+  React.useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  if (!isClient) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-muted-foreground">Caricamento Kanban...</div>
+      </div>
+    );
+  }
+
   return (
     <div className="p-4">
       <div className="flex gap-4">
@@ -415,6 +662,20 @@ const KanbanView = () => {
 };
 
 const TableView = () => {
+  const [isClient, setIsClient] = useState(false);
+
+  React.useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  if (!isClient) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-muted-foreground">Caricamento Table...</div>
+      </div>
+    );
+  }
+
   return (
     <div className="size-full overflow-auto">
       <Table>
@@ -475,6 +736,12 @@ const TableView = () => {
 };
 
 const RoadmapSection = () => {
+  const [isClient, setIsClient] = useState(false);
+
+  React.useEffect(() => {
+    setIsClient(true);
+  }, []);
+
   const views = [
     {
       id: 'gantt',
@@ -507,6 +774,14 @@ const RoadmapSection = () => {
       component: TableView,
     },
   ];
+
+  if (!isClient) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-muted-foreground">Caricamento Roadmap...</div>
+      </div>
+    );
+  }
 
   return (
     <Tabs className="not-prose size-full gap-0 divide-y" defaultValue="gantt">

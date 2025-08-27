@@ -1,5 +1,6 @@
 "use client"
 import * as React from "react"
+import dynamic from "next/dynamic"
 import { Label, Pie, PieChart, Sector } from "recharts"
 import {
   Select,
@@ -8,6 +9,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+
+// Dynamic import per evitare SSR
+const DynamicPieChart = dynamic(() => Promise.resolve(PieChart), {
+  ssr: false,
+  loading: () => (
+    <div className="w-[300px] h-[300px] bg-muted/20 rounded-lg animate-pulse flex items-center justify-center">
+      <div className="text-muted-foreground">Caricamento chart...</div>
+    </div>
+  ),
+})
 
 export const description = "An interactive pie chart"
 
@@ -44,6 +55,12 @@ const chartConfig = {
 
 export function ChartPieInteractive() {
   const [activeMonth, setActiveMonth] = React.useState(desktopData[0].month)
+  const [isClient, setIsClient] = React.useState(false)
+  
+  React.useEffect(() => {
+    setIsClient(true)
+  }, [])
+
   const activeIndex = React.useMemo(
     () => desktopData.findIndex((item) => item.month === activeMonth),
     [activeMonth]
@@ -93,48 +110,54 @@ export function ChartPieInteractive() {
       </div>
       <div className="flex justify-center">
         <div className="mx-auto aspect-square w-full max-w-[300px]">
-          <PieChart width={300} height={300} id="pie-chart-fixed">
-            <Pie
-              data={desktopData}
-              dataKey="desktop"
-              nameKey="month"
-              cx="50%"
-              cy="50%"
-              innerRadius={60}
-              outerRadius={120}
-              strokeWidth={5}
-            >
-              <Label
-                content={({ viewBox }) => {
-                  if (viewBox && "cx" in viewBox && "cy" in viewBox) {
-                    return (
-                      <text
-                        x={viewBox.cx}
-                        y={viewBox.cy}
-                        textAnchor="middle"
-                        dominantBaseline="middle"
-                      >
-                        <tspan
+          {isClient ? (
+            <DynamicPieChart width={300} height={300}>
+              <Pie
+                data={desktopData}
+                dataKey="desktop"
+                nameKey="month"
+                cx="50%"
+                cy="50%"
+                innerRadius={60}
+                outerRadius={120}
+                strokeWidth={5}
+              >
+                <Label
+                  content={({ viewBox }) => {
+                    if (viewBox && "cx" in viewBox && "cy" in viewBox) {
+                      return (
+                        <text
                           x={viewBox.cx}
                           y={viewBox.cy}
-                          className="fill-foreground text-3xl font-bold"
+                          textAnchor="middle"
+                          dominantBaseline="middle"
                         >
-                          {desktopData[activeIndex].desktop.toLocaleString()}
-                        </tspan>
-                        <tspan
-                          x={viewBox.cx}
-                          y={(viewBox.cy || 0) + 24}
-                          className="fill-muted-foreground"
-                        >
-                          Visitors
-                        </tspan>
-                      </text>
-                    )
-                  }
-                }}
-              />
-            </Pie>
-          </PieChart>
+                          <tspan
+                            x={viewBox.cx}
+                            y={viewBox.cy}
+                            className="fill-foreground text-3xl font-bold"
+                          >
+                            {desktopData[activeIndex].desktop.toLocaleString()}
+                          </tspan>
+                          <tspan
+                            x={viewBox.cx}
+                            y={(viewBox.cy || 0) + 24}
+                            className="fill-muted-foreground"
+                          >
+                            Visitors
+                          </tspan>
+                        </text>
+                      )
+                    }
+                  }}
+                />
+              </Pie>
+            </DynamicPieChart>
+          ) : (
+            <div className="w-[300px] h-[300px] bg-muted/20 rounded-lg animate-pulse flex items-center justify-center">
+              <div className="text-muted-foreground">Caricamento chart...</div>
+            </div>
+          )}
         </div>
       </div>
     </div>
