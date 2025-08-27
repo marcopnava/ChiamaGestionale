@@ -15,7 +15,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Plus, X } from 'lucide-react';
 
 // Mock data since faker is not available
-const generateId = () => Math.random().toString(36).substr(2, 9);
+const generateId = (index: number) => `task-${index.toString().padStart(3, '0')}`;
 
 const columns = [
   { id: 'planned', name: 'Planned', color: '#6B7280' },
@@ -49,7 +49,7 @@ const realisticTasks = [
 ];
 
 const exampleFeatures = realisticTasks.map((task, index) => ({
-  id: generateId(),
+  id: generateId(index),
   name: task.name,
   startAt: new Date(Date.now() - (index * 2 + 1) * 24 * 60 * 60 * 1000), // Date fisse basate sull'indice
   endAt: new Date(Date.now() + (index * 3 + 7) * 24 * 60 * 60 * 1000), // Date fisse basate sull'indice
@@ -68,7 +68,7 @@ const shortDateFormatter = new Intl.DateTimeFormat('it-IT', {
   day: 'numeric',
 });
 
-function AddTaskForm({ onAdd, onCancel }: { onAdd: (task: any) => void; onCancel: () => void }) {
+function AddTaskForm({ onAdd, onCancel, currentCount }: { onAdd: (task: any) => void; onCancel: () => void; currentCount: number }) {
   const [taskName, setTaskName] = useState('');
   const [selectedUser, setSelectedUser] = useState(users[0].id);
   const [selectedColumn, setSelectedColumn] = useState('planned');
@@ -77,7 +77,7 @@ function AddTaskForm({ onAdd, onCancel }: { onAdd: (task: any) => void; onCancel
     e.preventDefault();
     if (taskName.trim()) {
       const newTask = {
-        id: generateId(),
+        id: generateId(currentCount), // Usa il count passato come parametro
         name: taskName.trim(),
         startAt: new Date(),
         endAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days from now
@@ -171,14 +171,14 @@ export default function TodoList() {
       {showAddForm && (
         <AddTaskForm 
           onAdd={handleAddTask} 
-          onCancel={() => setShowAddForm(false)} 
+          onCancel={() => setShowAddForm(false)}
+          currentCount={features.length}
         />
       )}
 
       <KanbanProvider
         columns={columns}
         data={features}
-        onDataChange={handleDataChange}
       >
         {(column) => (
           <KanbanBoard id={column.id} key={column.id}>

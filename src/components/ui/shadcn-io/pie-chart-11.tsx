@@ -93,7 +93,7 @@ export function ChartPieInteractive() {
       </div>
       <div className="flex justify-center">
         <div className="mx-auto aspect-square w-full max-w-[300px]">
-          <PieChart width={300} height={300}>
+          <PieChart width={300} height={300} id="pie-chart-fixed">
             <Pie
               data={desktopData}
               dataKey="desktop"
