@@ -39,7 +39,7 @@ function CursorProvider({ ref, children, ...props }: CursorProviderProps) {
   const [isActive, setIsActive] = React.useState(false);
   const containerRef = React.useRef<HTMLDivElement>(null);
   const cursorRef = React.useRef<HTMLDivElement>(null);
-  React.useImperativeHandle(ref as any, () => containerRef.current as HTMLDivElement);
+  React.useImperativeHandle(ref, () => containerRef.current as HTMLDivElement);
  
   React.useEffect(() => {
     if (!containerRef.current) return;
@@ -104,8 +104,8 @@ function Cursor({ ref, children, className, style, ...props }: CursorProps) {
         (dock as HTMLElement).style.cursor = 'auto';
       });
       
-      // Applica il cursore personalizzato solo al container principale
-      parentElement.style.cursor = 'none';
+      // Non forzare il cursore a 'none' per evitare problemi di rendering
+      // parentElement.style.cursor = 'none';
       
       return () => {
         if (parentElement) {
@@ -148,7 +148,7 @@ function Cursor({ ref, children, className, style, ...props }: CursorProps) {
     <AnimatePresence>
       {isActive && (
         <motion.div
-          ref={cursorRef as React.Ref<HTMLDivElement>}
+          ref={cursorRef}
           data-slot="cursor"
           className={cn(
             'transform-[translate(-50%,-50%)] pointer-events-none z-[9999] absolute',
