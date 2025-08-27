@@ -167,69 +167,68 @@ export default function NewDashboard() {
           </Card>
         </div>
 
-        {/* Roadmap Section */}
-        <div className="mt-8">
-          <Card>
-            <CardHeader>
-              <CardTitle>Roadmap Progetto</CardTitle>
-              <CardDescription>Gestisci le feature e la pianificazione del progetto</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="h-96">
-                <RoadmapSection />
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+        {/* Roadmap and Quick Actions Grid */}
+        <div className="mt-8 grid gap-6 lg:grid-cols-3">
+          {/* Roadmap Section - 2/3 width */}
+          <div className="lg:col-span-2">
+            <Card>
+              <CardHeader>
+                <CardTitle>Roadmap Progetto</CardTitle>
+                <CardDescription>Gestisci le feature e la pianificazione del progetto</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="h-80">
+                  <RoadmapSection />
+                </div>
+              </CardContent>
+            </Card>
+          </div>
 
-
-
-
-
-        {/* PinList - Quick Actions */}
-        <div className="mt-8">
-          <Card>
-            <CardHeader>
-              <CardTitle>Azioni Rapide</CardTitle>
-              <CardDescription>Pinna le azioni più frequenti</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <PinList
-                items={[
-                  {
-                    id: 1,
-                    name: 'Nuovo Cliente',
-                    info: 'Aggiungi un nuovo cliente · Gestione Clienti',
-                    icon: Users,
-                    pinned: true,
-                  },
-                  {
-                    id: 2,
-                    name: 'Nuova Vendita',
-                    info: 'Registra una vendita · Gestione Vendite',
-                    icon: ShoppingCart,
-                    pinned: true,
-                  },
-                  {
-                    id: 3,
-                    name: 'Report Analytics',
-                    info: 'Visualizza report · Analisi Dati',
-                    icon: BarChart3,
-                    pinned: false,
-                  },
-                  {
-                    id: 4,
-                    name: 'Supporto Ticket',
-                    info: 'Gestisci ticket · Supporto Clienti',
-                    icon: MessageSquare,
-                    pinned: false,
-                  },
-                ]}
-                labels={{ pinned: 'Azioni Pinnate', unpinned: 'Altre Azioni' }}
-                className="max-w-2xl"
-              />
-            </CardContent>
-          </Card>
+          {/* PinList - Quick Actions - 1/3 width */}
+          <div className="lg:col-span-1">
+            <Card>
+              <CardHeader>
+                <CardTitle>Azioni Rapide</CardTitle>
+                <CardDescription>Pinna le azioni più frequenti</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <PinList
+                  items={[
+                    {
+                      id: 1,
+                      name: 'Nuovo Cliente',
+                      info: 'Aggiungi un nuovo cliente · Gestione Clienti',
+                      icon: Users,
+                      pinned: true,
+                    },
+                    {
+                      id: 2,
+                      name: 'Nuova Vendita',
+                      info: 'Registra una vendita · Gestione Vendite',
+                      icon: ShoppingCart,
+                      pinned: true,
+                    },
+                    {
+                      id: 3,
+                      name: 'Report Analytics',
+                      info: 'Visualizza report · Analisi Dati',
+                      icon: BarChart3,
+                      pinned: false,
+                    },
+                    {
+                      id: 4,
+                      name: 'Supporto Ticket',
+                      info: 'Gestisci ticket · Supporto Clienti',
+                      icon: MessageSquare,
+                      pinned: false,
+                    },
+                  ]}
+                  labels={{ pinned: 'Azioni Pinnate', unpinned: 'Altre Azioni' }}
+                  className="max-w-full"
+                />
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </div>
     </div>
